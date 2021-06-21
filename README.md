@@ -1,13 +1,19 @@
-Lite - PWA Starter Pack
-=======================
+Amplify - Login
+===============
 [TOC]
 
-Simple web app template build on top of [Lit](https://github.com/lit) , Material Design and Web Platform. This PWA template is based on the bright way showed us from Polymer project and all web entusiasts!
+AWS Amplify & Cognito Login example. In this simple example will be deeper into the use of Cognito, Users Pool and Auth / Ident on AWS platform.
 
 # Vite
-Vite is the framework used to dev / build the Lite WebApp template. So let's check !
+# Vite
+First action of course, boostrap an Vite WebApp environment. In this case we start with Lite project.
 
 ```bash
+#choose the project name eg. amplify-login
+lite amplify-login
+
+npm install
+
 # use Vite dev server
 npm run dev
 # build into dist folder
@@ -16,114 +22,67 @@ npm run build
 npm run preview
 ```
 
-# /images 
-Images folder contains all images the app needs. You can create all the png logo images starting from a svg file with an automatic process write into  **script_svgtopng** script. Let's use it: 
 
-https://developers.google.com/web/fundamentals/design-and-ux/browser-customization/
+# AWS
+Configure amplify,  you need to configure the user will handle the amplify project. IAM roles are a secure way to grant the Amplify Console permissions to act on resources in your account. To get all docs you need about the Amplify Console follow:
 
-The **script_svgtopng.sh** will create all the png images you need for: 
-
-+ all meta tag into index.html
-+ images linked into manifest.json
-+ website ico
-
-That's the images create from the **script_svgtopng.sh** starting from the svg file you insert into the images folder (insert only one svg, squared file):
-
-+ favicon.ico
-+ manifest/icon48x48.png
-+ manifest/icon48x48.png
-+ manifest/icon48x48.png
-+ manifest/icon96x96.png
-+ manifest/icon128x128.png
-+ manifest/icon144x144.png
-+ manifest/icon192x192.png
-+ manifest/icon256x256.png
-+ manifest/icon384x384.png
-+ manifest/icon512x512.png
-+ favicon/favicon-16.png
-+ favicon/favicon-32.png
-+ favicon/favicon-64.png
-+ favicon/favicon-96.png
+https://docs.aws.amazon.com/amplify/latest/userguide/welcome.html
 
 ```bash
-# launch the script in a folder with a svg squared logo image to produce 
-# all png the manifest.json needs 
-./script_svgtopng.sh
+# if need to install amplify CLI
+# npm i -g @aws-amplify/cli
+
+# configure the amplify project (choose / create the AWS user will handle the project on AWS)
+amplify configure
+
+# This requires you to sign in and then takes you through questions to set up 
+# Amplify for your project.
 ```
 
-**To runs the script you need imageMagick and InkScape installed!**
+## Initializing the Back End
+You need to add backend components such as a database and also authentication to your application. You can use AWS Cognito to authenticate users, and GraphQL endpoints to interact with the DB. Now we’ll use the AWS Amplify CLI to initialize these components to support our app:
 
-# WebApp Icons 
-+ icon .ico           : images/favicon.ico
+```bash
+amplify init
 
-## Android/Chrome
-+ tabs-icon (48x48)     : images/manifest/icon48x48.png
-+ tabs-icon (96x96)     : images/manifest/icon96x96.png
-+ normal-icon (128x128) : images/manifest/icon128x128.png
-+ normal-icon (144x144) : images/manifest/icon144x144.png
-+ hires-icon (192x192)  : images/manifest/icon192x192.png
-+ hires-icon (256x256)  : images/manifest/icon256x256.png
-+ hires-icon (384x384)  : images/manifest/icon384x384.png
+# some amplify commands
+amplify status
+# allow you to add features
+amplify add <category>
+# build all your local backend resources and provision it in the cloud
+amplify push
+# open the Amplify Console and view your project status
+amplify console
+# build all your local backend and frontend resources (if you have hosting category added) and provision it in the cloud
+amplify publish
 
-## IOS Icons 
-+ ios-icon (152x152)  : images/manifest/ios-icon.png
-+ ipad-icon (72x72)   : images/manifest/icon72x72.png
-+ iphone-retina-icon (120x120)  : images/manifest/icon120x120.png
-+ ipad-retina-icon (152x152)    : images/manifest/icon152x152.png
-+ iphone-x-icon (180x180)       : images/manifest/icon180x180.png
-
-## Windows 8/10
-+ small (70x70)     : images/manifest/icon70x70.png
-+ medium (150x150)  : images/manifest/icon150x150.png
-+ big (310x310)     : images/manifest/icon310x310.png
-
-## Handle the mwc-icon-button click 
-With LitElement at the base handling the click or other events on the material design mwc-icon-button it's easy as
-
-# Views Dynamic Import
-The key in speed up the loading time it's avoid the static imports whenever is possible. Preferred dynamic imports they're going to be better for reduce code size down the wire. This pattern is implemented here with the little helper function **lazyLoad**, basically creates a place to put a dynamic import and it takes a template that just going to pass the template forward and render that template when the dynamic import is done.
-
-```javascript
-class LitMailApp extends LitElement {
-  // ... 
-  _renderCurrentView () {
-    switch (this.currentView) {
-      case 'inbox':
-        return lazyLoad(
-          import('./litmail-inbox.js'),
-          html`<litmail-inbox .data=${this.data}></litmail-inbox>)`)
-      case 'thread':
-        return lazyLoad(
-          import('./litmail-thread.js'),
-          html`<litmail-thread .data=${this.data}></litmail-thread>`)
-      default: return html`<h3>Default View</h3>`
-    }
-  }
-}
+# Try "amplify add api" to create a backend API and then "amplify publish" to deploy everything
 ```
 
-# Async Tasks
-Async tasks can dispatch a CustomEvent with a promise into the detail payload, the main app component the *<app-lite>* extends the **PendingContainer** class to permit to the main app component to listening and set the **_hasPendingChildren** and **_pendingCount** properties. The **_pendingCount** is the actually active pending tasks (or children for a parent component) number, when no active pending tasks are present the **_hasPendingChildren** property is set to false, this property is binded to material design web component *</mwc-linear-progress>* to show into UI when tasks are active, of course you can build and handle a parent/child architecture with different components as a **PendingContainer** for async child tasks! Here the pattern implemented in *<app-lite>* : 
-```javascript
-// pending-container.js
-export const PendingContainer = (base) =>
-    ... 
-        _hasPendingChildren: Boolean,
-        _pendingCount: Number
-    ...
-  }
+## Hosting
+The core library for interacting with AWS services in applications is **aws-amplify** . The CLI only creates back-end services. This library controls how the application connects to the back end and triggers actions. So install it:
 
-// app-lite.js
-class AppLite extends PendingContainer(LitElement) { 
-  ... 
-  render () {
-    return html`
-      <!-- Progress Bar for Async tasks -->
-      <mwc-linear-progress 
-        indeterminate 
-        .closed="${!this._hasPendingChildren}">
-      </mwc-linear-progress>
-    `
-  }
-}
+```bash
+# project root
+npm install --save aws-amplify
+
+# adding hosting to your project
+amplify hosting add
 ```
+
+## Authentication & Cognito
+Authentication with Amplify. The Amplify Framework uses Amazon Cognito as the main authentication provider. Amazon Cognito is a robust user directory service that handles user registration, authentication, account recovery & other operations. In this tutorial, you’ll learn how to add authentication to your application using Amazon Cognito and username/password login.
+
+https://docs.amplify.aws/lib/auth/getting-started/q/platform/js
+
+```bash
+# project root (eg. email)
+amplify add auth
+# deploy the service (back end)
+amplify push
+# view the deployed services in your project at any time,
+amplify console
+```
+
+Time to start coding to login / logout the user !
+

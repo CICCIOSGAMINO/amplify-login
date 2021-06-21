@@ -13,7 +13,8 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview --port 3000 --host"
+    "preview": "vite preview --port 3000 --host",
+    "deploy": "amplify publish"
   },
   "private": false,
   "dependencies": {
@@ -26,7 +27,9 @@
     "@material/mwc-snackbar": "^0.21.0",
     "@material/mwc-tab": "^0.21.0",
     "@material/mwc-tab-bar": "^0.21.0",
+    "@material/mwc-textfield": "^0.21.0",
     "@material/mwc-top-app-bar": "^0.21.0",
+    "aws-amplify": "^4.1.1",
     "lit": "*",
     "page": "^1.11.6"
   },

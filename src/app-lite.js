@@ -48,9 +48,7 @@ class AppLite extends PendingContainer(LitElement) {
     // routing stuff (some binding)
     this._initRoutes = this._initRoutes.bind(this)
     this._homeRoute = this._homeRoute.bind(this)
-    this._oneRoute = this._oneRoute.bind(this)
-    this._twoRoute = this._twoRoute.bind(this)
-    this._threeRoute = this._threeRoute.bind(this)
+    this._loginRoute = this._loginRoute.bind(this)
     this._notFoundRoute = this._notFoundRoute.bind(this)
     // init the Routing
     this._initRoutes()
@@ -144,9 +142,7 @@ class AppLite extends PendingContainer(LitElement) {
     // if the current URL matches those patterns
     page.redirect('/', '/home')
     page('/home', this._homeRoute)
-    page('/one', this._oneRoute)
-    page('/two', this._twoRoute)
-    page('/three', this._threeRoute)
+    page('/login', this._loginRoute)
     page('*', this._notFoundRoute)
     page()
   }
@@ -156,16 +152,8 @@ class AppLite extends PendingContainer(LitElement) {
     this.currentView = views.HOME
   }
 
-  _oneRoute () {
-    this.currentView = views.ONE
-  }
-
-  _twoRoute () {
-    this.currentView = views.TWO
-  }
-
-  _threeRoute () {
-    this.currentView = views.THREE
+  _loginRoute () {
+    this.currentView = views.LOGIN
   }
 
   _notFoundRoute () {
@@ -173,7 +161,7 @@ class AppLite extends PendingContainer(LitElement) {
   }
 
   _tabsRoute (event) {
-    // retrieve the views (eg. home, one, two)
+    // retrieve the views (eg. home, login)
     const view = Object.values(views)[event.detail.index]
     // handle the tab with page.js API (CustomEvent is possible too)
     if (view) {
@@ -242,20 +230,10 @@ class AppLite extends PendingContainer(LitElement) {
             </view-home>
             `
         )
-      case views.ONE:
+      case views.LOGIN:
         return lazyLoad(
-          import('./views/view-one'),
-          html`<view-one></view-one>`
-        )
-      case views.TWO:
-        return lazyLoad(
-          import('./views/view-two'),
-          html`<view-two></view-two>`
-        )
-      case views.THREE:
-        return lazyLoad(
-          import('./views/view-three'),
-          html`<view-three></view-three>`
+          import('./views/view-login'),
+          html`<view-login></view-login>`
         )
       default:
         return lazyLoad(
@@ -349,9 +327,7 @@ class AppLite extends PendingContainer(LitElement) {
       <!-- Tabs --> 
       <mwc-tab-bar @MDCTabBar:activated="${this._tabsRoute}">
         <mwc-tab label="home"></mwc-tab>
-        <mwc-tab label="one"></mwc-tab>
-        <mwc-tab label="two"></mwc-tab>
-        <mwc-tab label="three"></mwc-tab>
+        <mwc-tab label="login"></mwc-tab>
       </mwc-tab-bar>
     `
     const materialSnackbar = html`
