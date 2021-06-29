@@ -42,7 +42,12 @@ class ViewHome extends LitElement {
       <hr>
       <h3>Trigger some 5sec Async Tasks!</h3>
       <p>Pending Tasks (${this._pendingCount}) ${this._hasPendingChildren}</p>
-      <button @click="${this._handleClick}">Fire pending-state </button>
+
+      <button 
+        @click=${this._handleClick}
+        ?disabled=${this._hasPendingChildren} >
+        Fire pending-state
+      </button>
 
       <custom-footer></custom-footer>
     `

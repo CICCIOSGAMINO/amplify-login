@@ -13,6 +13,7 @@ import '@material/mwc-list'
 import '@material/mwc-list/mwc-list-item'
 import '@material/mwc-linear-progress'
 import '@material/mwc-snackbar'
+import '@material/mwc-textfield'
 
 /* components */
 import { PendingContainer } from './components/pending-container'
@@ -226,14 +227,17 @@ class AppLite extends PendingContainer(LitElement) {
           html`
             <view-home 
               ._hasPendingChildren="${this._hasPendingChildren}"
-              ._pendingCount="${this._pendingCount}">
+              ._pendingCount="${this._pendingCount}" >
             </view-home>
             `
         )
       case views.LOGIN:
         return lazyLoad(
           import('./views/view-login'),
-          html`<view-login></view-login>`
+          html`<view-login
+              ._hasPendingChildren="${this._hasPendingChildren}"
+              ._pendingCount="${this._pendingCount}" >
+            </view-login>`
         )
       default:
         return lazyLoad(

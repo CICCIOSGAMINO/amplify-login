@@ -1,13 +1,9 @@
 // view-login (Login)
-import { html, css, LitElement } from 'lit'
-import Amplify from 'aws-amplify'
-import awsconfig from '../aws-exports'
-import '@material/mwc-textfield'
+import { LitElement, html, css } from 'lit'
 
 class ViewLogin extends LitElement {
   static get properties () {
     return {
-      _pendingCount: Number,
       _hasPendingChildren: Boolean
     }
   }
@@ -21,18 +17,37 @@ class ViewLogin extends LitElement {
     `
   }
 
-  constructor () {
-    super()
-    Amplify.configure(awsconfig)
+  connectedCallback () {
+    super.connectedCallback()
+    /*
+    this._timerInterval = setInterval(() => {
+      this.pending = true
+      // this.requestUpdate()
+    }, 5000) */
   }
 
-  _handleClick () {
-    console.log('@HANDLE >> CLICK')
+  disconnectedCallback () {
+    super.disconnectedCallback()
+    // clearInterval(this._timerInterval)
+  }
+
+  firstUpdated () {
+    // disable form submit
+    const form = this.shadowRoot.querySelector('form')
+    form.addEventListener('submit', event => {
+      // event.preventDefault()
+      console.log(`@EVENT >> ${event.target}`)
+    })
+  }
+
+  _login (event) {
     const p = new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve('')
-      }, 5000)
+      }, 2000)
     })
+
+    // fire the pending-state event
     const pendingStateEvent = new CustomEvent('pending-state', {
       bubbles: true,
       composed: true,
@@ -40,28 +55,13 @@ class ViewLogin extends LitElement {
         promise: p
       }
     })
-
     this.dispatchEvent(pendingStateEvent)
-  }
-
-  _auth () {
-    console.log('@LOGIN >> Click')
-    const p = new Promise((resolve, reject) => {
-
-    })
   }
 
   render () {
     return html`
       <h1>Login</h1>
-      <hr>
-      <h3>Login Here!</h3>
-      <p>Pending Tasks (${this._pendingCount}) ${this._hasPendingChildren}</p>
-      <button @click="${this._handleClick}">Fire pending-state </button>
-
       <form>
-        
-        <!-- 
         <mwc-textfield
           id="email"
           label="Email">
@@ -71,15 +71,14 @@ class ViewLogin extends LitElement {
         <mwc-textfield
           id="psw"
           label="Password">
-        </mwc-textfield> -->
-        <label for="email">email</label>
-        <input id="email" type="text" />
+        </mwc-textfield>
 
-        <label for="psw">password</label>
-        <input id="psw" type="password" />
+        <button
+          @click=${this._login}
+          ?disabled=${this._hasPendingChildren} >
+          Login
+        </button>
       </form>
-
-      <button @click=${this._auth}>Login</button>
     `
   }
 }
